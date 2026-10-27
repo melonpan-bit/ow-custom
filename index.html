@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>とりあえずOWカスタム祭り 参加同意</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap">
+<style>
+/* Layout: one narrow neon-framed column — rules as tickable rows, a gate button at the bottom that unlocks only when every row is ticked. Single dark look on purpose (matches the event's neon flyers). */
+:root {
+  color-scheme: dark;
+  --bg: #0b0716;
+  --panel: #150d26;
+  --line: #2c2046;
+  --fg: #f3effa;
+  --muted: #a99cc4;
+  --cyan: #3fe3ff;
+  --pink: #ff3fb4;
+  --yellow: #ffd84a;
+  --red: #ff4a5a;
+  --display: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
+  --body: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(60rem 30rem at 110% -10%, rgba(255,63,180,.18), transparent 60%),
+    radial-gradient(50rem 30rem at -20% 0%, rgba(63,227,255,.14), transparent 60%);
+  color: var(--fg);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 640px; margin: 0 auto; display: grid; gap: 28px; }
+
+header {
+  border: 2px solid var(--pink);
+  border-radius: 14px;
+  padding: 22px 20px 20px;
+  box-shadow: 0 0 18px rgba(255,63,180,.45), inset 0 0 18px rgba(255,63,180,.18);
+  display: grid; gap: 10px;
+}
+.eyebrow { font-family: var(--display); font-weight: 800; color: var(--cyan); letter-spacing: .12em; font-size: 12px; }
+h1 {
+  margin: 0; font-family: var(--display); font-weight: 900; line-height: 1.25;
+  font-size: clamp(26px, 6.5vw, 38px); text-wrap: balance;
+  color: #fff;
+  text-shadow: 0 0 6px rgba(255,63,180,.9), 0 0 18px rgba(255,63,180,.6);
+}
+.lead { margin: 0; color: var(--muted); }
+.lead strong { color: var(--fg); }
+
+section { display: grid; gap: 12px; }
+h2 {
+  margin: 0; font-family: var(--display); font-weight: 900; font-size: 20px;
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+}
+h2 .tag { font-family: var(--body); font-weight: 700; font-size: 12px; color: var(--muted); }
+.s-rules h2 { color: var(--cyan); }
+.s-mind h2 { color: var(--yellow); }
+.s-hande h2 { color: var(--pink); }
+
+.list { display: grid; gap: 8px; }
+.item {
+  display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: start;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+  padding: 12px 14px; cursor: pointer;
+  transition: border-color .15s, box-shadow .15s;
+}
+.item:hover { border-color: #4a3a6e; }
+.item input {
+  appearance: none; -webkit-appearance: none; margin: 2px 0 0;
+  width: 24px; height: 24px; border-radius: 6px;
+  border: 2px solid var(--muted); background: transparent; cursor: pointer;
+  display: grid; place-items: center;
+}
+.item input::after { content: ""; width: 7px; height: 12px; border: solid var(--bg); border-width: 0 3px 3px 0; transform: rotate(45deg) translate(-1px,-1px); opacity: 0; }
+.item input:checked { background: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 10px rgba(63,227,255,.7); }
+.item input:checked::after { opacity: 1; }
+.item input:focus-visible { outline: 2px solid var(--yellow); outline-offset: 3px; }
+.item:has(input:checked) { border-color: rgba(63,227,255,.55); }
+.s-hande .item input:checked { background: var(--pink); border-color: var(--pink); box-shadow: 0 0 10px rgba(255,63,180,.7); }
+.s-hande .item:has(input:checked) { border-color: rgba(255,63,180,.6); }
+.item .t { min-width: 0; }
+.item b { font-weight: 700; }
+.item .sub { display: block; color: var(--muted); font-size: 13px; }
+.em { color: var(--red); font-weight: 700; }
+
+.note {
+  background: var(--panel); border: 1px dashed var(--line); border-radius: 10px;
+  padding: 14px 16px; color: var(--fg);
+}
+.note p { margin: 0 0 8px; }
+.note p:last-child { margin: 0; }
+
+.hande-box {
+  border: 1px solid rgba(255,63,180,.45); border-radius: 12px; padding: 14px 16px;
+  background: rgba(255,63,180,.06); display: grid; gap: 8px;
+}
+.hande-box .cap { font-size: 13px; color: var(--muted); margin: 0; }
+.hande-box ol { margin: 0; padding-left: 1.4em; display: grid; gap: 2px; }
+.hande-box li::marker { color: var(--pink); font-weight: 700; }
+.hande-box .ex { color: var(--muted); font-size: 13px; }
+
+.gate {
+  border-top: 1px solid var(--line); padding-top: 24px;
+  display: grid; gap: 12px; justify-items: center; text-align: center;
+}
+.progress { font-family: var(--display); font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; }
+.progress .n { color: var(--fg); }
+.go {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; max-width: 420px; padding: 16px 20px; border-radius: 999px;
+  font-family: var(--display); font-weight: 900; font-size: 18px; text-decoration: none;
+  color: var(--muted); background: transparent; border: 2px solid var(--line);
+  pointer-events: none; transition: all .2s;
+}
+.go.on {
+  color: var(--bg); background: var(--yellow); border-color: var(--yellow);
+  box-shadow: 0 0 22px rgba(255,216,74,.6); pointer-events: auto;
+}
+.go.on:hover { transform: translateY(-1px); box-shadow: 0 0 30px rgba(255,216,74,.8); }
+.go:focus-visible { outline: 3px solid var(--cyan); outline-offset: 4px; }
+.hint { margin: 0; font-size: 13px; color: var(--muted); }
+.thanks { margin: 0; font-family: var(--display); font-weight: 800; color: var(--yellow); }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">OVERWATCH CUSTOM ／ 参加前の確認</div>
+    <h1>【】とりあえずOWカスタム祭り【】</h1>
+    <p class="lead">初心者もわいわい楽しむための会です。<strong>全部の項目にチェックを入れると、日程調整ページに進めます。</strong></p>
+  </header>
+
+  <section class="s-rules">
+    <h2>全体ルール</h2>
+    <div class="list">
+      <label class="item"><input type="checkbox" id="r1"><span class="t">マップ＆ルールはランダムで決定<span class="sub">フラッシュポイントは抜き</span></span></label>
+      <label class="item"><input type="checkbox" id="r2"><span class="t">チームはカスタム機能のバランス調整で随時変動する<span class="sub">チーム人数も参加人数によって変わります</span></span></label>
+      <label class="item"><input type="checkbox" id="r3"><span class="t">ロール・ピックは事前に協議する<span class="sub">各チームで順番に譲り合ってね</span></span></label>
+      <label class="item"><input type="checkbox" id="r4"><span class="t"><span class="em">レベル15未満のヒーローのみ</span>ピックできる</span></label>
+      <label class="item"><input type="checkbox" id="r5"><span class="t">オールキュー（どのロールでも）をやる覚悟がある</span></label>
+      <label class="item"><input type="checkbox" id="r6"><span class="t">自分の<span class="em">使い慣れていないヒーロー</span>で遊ぶ</span></label>
+      <label class="item"><input type="checkbox" id="r7"><span class="t">聞かれるまで<span class="em">アドバイス・指示をしない</span><span class="sub">「これってどうすればいいんですか〜？」と聞かれるまで見守る</span></span></label>
+    </div>
+  </section>
+
+  <section class="s-mind">
+    <h2>心構え</h2>
+    <div class="note">
+      <p>初心者帯も含めて楽しめるように、上級者は<b>【縁の下の力持ち】</b>でいる心構えを必ず持ってきてください。エンジョイ大前提で！！！</p>
+      <p>相手チームを倒す歯茎剥き出しプレイではなく、みんなで不慣れなヒーローを使って<b>運命のピック</b>を探そうぜ！それを皆で楽しもう！の会です。</p>
+    </div>
+    <div class="list">
+      <label class="item"><input type="checkbox" id="m1"><span class="t">勝ち負けより<b>みんなで楽しむこと</b>を優先する</span></label>
+      <label class="item"><input type="checkbox" id="m2"><span class="t">初心者を<b>狙ってキルし続けるようなプレイはしない</b></span></label>
+    </div>
+  </section>
+
+  <section class="s-hande">
+    <h2>上級者組へのハンデ <span class="tag">仮案・内容は当日変わる場合あり</span></h2>
+    <div class="hande-box">
+      <p class="cap">上級者組と判断された人には、以下のようなハンデを（組み合わせで）つけることがあります。</p>
+      <ol>
+        <li>ランク5以下のヒーローのみ</li>
+        <li>サポートのみ（ドクトリン全体禁止）</li>
+        <li>ウルト禁止</li>
+        <li>メイン攻撃のみ</li>
+        <li>キル○以上禁止</li>
+        <li>ダメージが○○以上になった段階で○○禁止<br><span class="ex">例：キル禁止／2000ダメ以上でウルト封印 → 3000ダメ以上でサブ封印</span></li>
+      </ol>
+    </div>
+    <div class="list">
+      <label class="item"><input type="checkbox" id="h1"><span class="t">上級者組と判断された場合、<b>指定されたハンデを了承して守る</b></span></label>
+    </div>
+  </section>
+
+  <div class="gate">
+    <div class="progress" id="progress"><span class="n" id="done">0</span> / <span id="total">0</span> 項目チェック済み</div>
+    <a class="go" id="go" href="#" target="_blank" rel="noopener" aria-disabled="true" tabindex="-1">同意して日程調整へ進む</a>
+    <p class="hint" id="hint">すべての項目にチェックすると押せるようになります</p>
+  </div>
+</div>
+
+<script>
+// 日程調整ページのURL（ここを差し替える）
+const SCHEDULE_URL = "https://chouseisan.com/s?h=32de5b47803a481b882d971955edb2e9";
+
+const boxes = [...document.querySelectorAll('.item input[type=checkbox]')];
+const go = document.getElementById('go');
+const hint = document.getElementById('hint');
+document.getElementById('total').textContent = boxes.length;
+
+function update() {
+  const n = boxes.filter(b => b.checked).length;
+  document.getElementById('done').textContent = n;
+  const ok = n === boxes.length;
+  const ready = ok && SCHEDULE_URL;
+  go.classList.toggle('on', !!ready);
+  go.setAttribute('aria-disabled', ready ? 'false' : 'true');
+  go.tabIndex = ready ? 0 : -1;
+  go.href = ready ? SCHEDULE_URL : '#';
+  if (!ok) hint.textContent = 'すべての項目にチェックすると押せるようになります';
+  else if (!SCHEDULE_URL) hint.textContent = '日程調整ページのリンクを準備中です。少し待ってね';
+  else { hint.textContent = 'ご協力ありがとうございます！当日よろしくお願いします'; hint.className = 'thanks'; return; }
+  hint.className = 'hint';
+}
+boxes.forEach(b => b.addEventListener('change', update));
+go.addEventListener('click', e => { if (go.getAttribute('aria-disabled') === 'true') e.preventDefault(); });
+update();
+</script>
+</body>
+</html>
